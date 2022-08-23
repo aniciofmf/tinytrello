@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid";
 import { FC, ReactNode, useEffect, useReducer } from "react";
+import { useSnackbar } from "notistack";
 
 import { TaskContext, TaskReducer } from "./";
 import { Task, TaskState } from "../../interfaces";
@@ -11,6 +11,7 @@ const INITIAL_STATE: TaskState = {
 
 export const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const [state, dispatch] = useReducer(TaskReducer, INITIAL_STATE);
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		getTasks();
@@ -28,11 +29,22 @@ export const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		dispatch({ type: "ADD_TASK", payload: data });
 	};
 
-	const updateTask = async (task: Task) => {
+	const updateTask = async (task: Task, showSnackBar: boolean = false) => {
 		try {
-			const { data } = await taskApi.put<Task>(`/tasks/${task._id}`, { decription: task.description, status: task.status });
+			const { data } = await taskApi.put<Task>(`/tasks/${task._id}`, { description: task.description, status: task.status });
 
 			dispatch({ type: "UPDATE_TASK", payload: data });
+
+			if (showSnackBar) {
+				enqueueSnackbar("Task updated!", {
+					variant: "success",
+					autoHideDuration: 2000,
+					anchorOrigin: {
+						vertical: "top",
+						horizontal: "right",
+					},
+				});
+			}
 		} catch (error) {}
 	};
 

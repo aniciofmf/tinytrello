@@ -1,9 +1,11 @@
 import { DragEvent, FC, useContext } from "react";
+import { useRouter } from "next/router";
 import { Card, CardActionArea, CardActions, CardContent, Typography } from "@mui/material";
 
 import { Task } from "../../../interfaces";
 import { UIContext } from "../../../context/ui/Context";
-import { useRouter } from "next/router";
+import { dateHelper } from "../../../helpers";
+import { TaskOnly } from "../../../interfaces/task/Task";
 
 interface Props {
 	task: Task;
@@ -37,7 +39,7 @@ export const TaskCard: FC<Props> = ({ task }) => {
 				</CardContent>
 
 				<CardActions sx={{ display: "flex", justifyContent: "end", paddingRight: 2 }}>
-					<Typography sx={{ fontSize: "12px" }}>created 1hr ago</Typography>
+					<Typography sx={{ fontSize: "12px" }}>{dateHelper.getFormatDistanceToNow(task.createdAt)}</Typography>
 				</CardActions>
 			</CardActionArea>
 		</Card>

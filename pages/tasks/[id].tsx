@@ -19,24 +19,38 @@ import {
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
-import { Layout } from "../../components/layouts";
+import { getTaskById } from "../../db/task";
 import { Task, TaskStatus } from "../../interfaces/";
 import { TaskContext } from "../../context/tasks";
+import { Layout } from "../../components/layouts";
+import { dateHelper } from "../../helpers";
 
 const statusList: TaskStatus[] = ["todo", "progress", "completed"];
 
-const TaskPage: FC<any> = ({ task }) => {
-	const [taskValue, setTaskValue] = useState("");
-	const [statusOption, setStatus] = useState<TaskStatus>("todo");
+const TaskPage: FC<{ task: Task }> = ({ task }) => {
+	const [taskValue, setTaskValue] = useState(task.description);
+	const [statusOption, setStatus] = useState<TaskStatus>(task.status);
 	const [inFocus, setInFocus] = useState(false);
 	const { updateTask } = useContext(TaskContext);
+
+	const update = async () => {
+		if (taskValue.trim().length === 0) return;
+
+		const updatedTask = {
+			...task,
+			description: taskValue,
+			status: statusOption,
+		};
+
+		updateTask(updatedTask, true);
+	};
 
 	return (
 		<Layout title="Edit Task">
 			<Grid container justifyContent="center" sx={{ marginTop: 2 }}>
 				<Grid item xs={12} sm={8} md={6}>
 					<Card>
-						<CardHeader title="Task Title" subheader="Task subheader"></CardHeader>
+						<CardHeader title="Task Update" subheader={`${dateHelper.getFormatDistanceToNow(task.createdAt)}`}></CardHeader>
 						<CardContent>
 							<TextField
 								error={taskValue.length === 0 && inFocus}
@@ -62,7 +76,7 @@ const TaskPage: FC<any> = ({ task }) => {
 						<CardActions>
 							<Button
 								disabled={taskValue.length <= 0}
-								onClick={() => {}}
+								onClick={update}
 								startIcon={<SaveOutlinedIcon />}
 								variant="outlined"
 								color="primary"
@@ -84,8 +98,20 @@ const TaskPage: FC<any> = ({ task }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	const { id } = params as { id: string };
+	const task = await getTaskById(id);
+
+	if (!task) {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			},
+		};
+	}
 	return {
-		props: {},
+		props: {
+			task,
+		},
 	};
 };
 
