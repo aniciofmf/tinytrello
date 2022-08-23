@@ -1,0 +1,8 @@
+services:
+  tasksdb:
+    image: mongo:5
+    container_name: tasksdb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
