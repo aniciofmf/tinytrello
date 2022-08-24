@@ -23,7 +23,7 @@ export const TaskList: FC<Props> = ({ status }) => {
 		const task = tasks.find((task) => task._id === taskId)!;
 
 		task.status = status;
-		updateTask(task);
+		updateTask(task, false);
 		setDragging(false);
 	};
 
