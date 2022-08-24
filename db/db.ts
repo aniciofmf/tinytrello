@@ -24,7 +24,7 @@ export const dbConnect = async () => {
 };
 
 export const dbDisconnect = async () => {
-	if (process.env.NODE_ENV === "development") return;
+	if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "production") return;
 
 	if (dbConn.connected === 0) return;
 
