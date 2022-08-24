@@ -11,9 +11,6 @@ export const Navbar: FC = () => {
 	return (
 		<AppBar position="sticky" elevation={1}>
 			<Toolbar>
-				<IconButton size="large" edge="start" disableRipple={true} onClick={openMenu}>
-					<MenuOutlinedIcon />
-				</IconButton>
 				<NextLink href="/" passHref>
 					<Link underline="none" color="white">
 						<Typography variant="h6">Tiny Trello</Typography>
