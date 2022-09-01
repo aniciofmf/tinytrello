@@ -1,13 +1,8 @@
-import { FC, useContext } from "react";
+import { FC } from "react";
 import NextLink from "next/link";
-import { AppBar, IconButton, Toolbar, Typography, Link } from "@mui/material";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-
-import { UIContext } from "../../context/ui";
+import { AppBar, Toolbar, Typography, Link } from "@mui/material";
 
 export const Navbar: FC = () => {
-	const { openMenu } = useContext(UIContext);
-
 	return (
 		<AppBar position="sticky" elevation={1}>
 			<Toolbar>
